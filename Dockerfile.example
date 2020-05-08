@@ -1,0 +1,4 @@
+FROM ubuntu
+copy --from=dacrystal/exec-as-user /bin/su-exec.linux64 /bin/su-exec
+copy --from=dacrystal/exec-as-user /docker-entrypoint.sh /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
