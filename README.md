@@ -1,25 +1,26 @@
 # docker-exec-as-user
 
-## TL;DR
-### Build
+### TL;DR
+
+## Build
 #### Example of `Dockerfile` for `alpine` base image:
-```Dockerfile
+```dockerfile
 FROM alpine # or any image based on "alpine"
-copy --from=dacrystal/exec-as-user /bin/su-exec.alpain /bin/su-exec
-copy --from=dacrystal/exec-as-user /docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=dacrystal/exec-as-user /bin/su-exec.alpain /bin/su-exec
+COPY --from=dacrystal/exec-as-user /docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 ```
 
 #### Example of `Dockerfile` for other `Linux` base image:
-```Dockerfile
+```dockerfile
 FROM ubuntu #centos or debian etc..
-copy --from=dacrystal/exec-as-user /bin/su-exec.linux64 /bin/su-exec
-copy --from=dacrystal/exec-as-user /docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=dacrystal/exec-as-user /bin/su-exec.linux64 /bin/su-exec
+COPY --from=dacrystal/exec-as-user /docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 ```
 
 
-### Usage 
+## Usage 
 
 ```sh
 docker run [OPTIONS...] [-e USER=user] -e AS_USER=<UID>[:<GID>] <EXEC_AS_USER_BASE_IMAGE> [CMD...]
@@ -34,10 +35,10 @@ Note: `USER` variable is default to `"user"`
 
 ----
 
-## How?
+### How?
 Simply the `ENTRYPOINT` script will create a real user corresponding to `AS_USER` and switch to it using `su-exec`. Yes, that's it!
 
-## Why not using `--user`?
+### Why not using `--user`?
 
 `--user` option does not create a real user. That is to say:
 - `user` does not exist in `/ets/passwd`. Some software fail if user is does not exist.
@@ -45,7 +46,7 @@ Simply the `ENTRYPOINT` script will create a real user corresponding to `AS_USER
 - `user` is name-less. Same bla bla bla...
 
 
-## Why one need to switch user in the first place?!
-Due to the same reasons that `one` read this crap! 
+### Why one need to switch user in the first place?!
+Due to the same reasons that `one` is reading this crap! 
 
 - My main user-case is for container(a build or CLI wrapper) that generate files on a mounted volume (`-v $PWD:/my-mount`). This will ensure the files have the right permissions. 
